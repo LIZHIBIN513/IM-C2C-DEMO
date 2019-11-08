@@ -17,12 +17,6 @@ Page({
     allConversation: [],
     noData: '/static/header.png'
   },
-  //事件处理函数
-  bindViewTap: function() {
-    wx.navigateTo({
-      url: '../logs/logs'
-    })
-  },
 
   onLoad: function () {
     if (app.globalData.userInfo) {
@@ -51,6 +45,8 @@ Page({
         }
       })
     }
+
+    this.initListener();
   },
   getUserInfo: function(e) {
     app.globalData.userInfo = e.detail.userInfo
@@ -69,7 +65,6 @@ Page({
         console.log('IM 登录成功');
       })
     }
-    this.initListener();
   },
   initListener() {
     const that = this;
@@ -90,7 +85,6 @@ Page({
     // 会话列表更新
     app.tim.on(app.TIM.EVENT.CONVERSATION_LIST_UPDATED, event => {
       // 更新会话列表 凡是不能直接合并原来的会话信息 【数据格式不一致】
-      console.log('会话列表 更新', event.data)
       that.updateAllConversation(event.data)
     })
   },
@@ -118,18 +112,24 @@ Page({
       //   selfSignature: '我的个性签名',
       //   allowType: app.TIM.TYPES.ALLOW_TYPE_ALLOW_ANY
       // });
-      app.tim.getConversationList().then((event) => {
-        const list = event.data.conversationList;
-        for (let i = 0; i < list.length; i++) {
-          let message = list[i]
-          let date = new Date(message.lastMessage.lastTime * 1000)
-          list[i].newtime = formatTime(date)
-        }
-        that.setData({
-          allConversation: list
-        })
-      })
+      that.getConversation()
     }
+  },
+
+  // 拉取会话列表
+  getConversation() {
+    const that = this;
+    app.tim.getConversationList().then((event) => {
+      const list = event.data.conversationList;
+      for (let i = 0; i < list.length; i++) {
+        let message = list[i]
+        let date = new Date(message.lastMessage.lastTime * 1000)
+        list[i].newtime = formatTime(date)
+      }
+      that.setData({
+        allConversation: list
+      })
+    })
   },
   // 更新列表
   updateAllConversation (list) {
@@ -159,7 +159,6 @@ Page({
       })
     });
   },
-
   onUnload: function() {
     app.tim.logout()
   }
