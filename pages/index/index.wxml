@@ -1,0 +1,41 @@
+<!--index.wxml-->
+<!--<view class="container">
+  <view class="userinfo">
+    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+    <block wx:else>
+      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+    </block>
+  </view>
+  <view class="usermotto">
+    <text class="user-motto">{{motto}}</text>
+  </view>
+</view>-->
+
+<view class="message-sec">
+  <view class="list-item" wx:for="{{allConversation}}" wx:key="{{index}}" wx:if="{{allConversation.length > 0}}" bindtap='linkChat'
+        data-id="{{item.userProfile.userID}}" data-conversation-id="{{item.conversationID}}" data-name="{{item.userProfile.nick}}" data-image="{{item.userProfile.avatar}}">
+    <image class="left" wx:if="{{item.userProfile.avatar == ''}}" src="{{noData}}"></image>
+    <image class="left" wx:if="{{item.userProfile.avatar != ''}}" src="{{item.userProfile.avatar}}"></image>
+    <View class="right">
+      <view class="information">
+        <view class="username">{{item.userProfile.nick || item.userProfile.userID}}</view>
+        <view class="last">{{item.newtime}}</view>
+      </view>
+      <view class="information">
+        <view class="content">{{item.lastMessage.messageForShow}}</view>
+        <view class="remain" wx:if="{{item.unreadCount > 0}}">{{item.unreadCount}}</view>
+      </view>
+    </View>
+    <!--<em class="abs" >{{item.userProfile.nick}}</em>-->
+    <!--<view class="content">-->
+      <!--<view class="flex">-->
+        <!--<view class="flex100-5 tr">{{item.lastMessage._lastTime}}</view>-->
+      <!--</view>-->
+      <!--<view class="text ellipsis" wx:if="{{item.unreadCount == 0}}">{{item.lastMessage.payload.text}}</view>-->
+      <!--<view class="text ellipsis" wx:if="{{item.unreadCount > 0}}">[{{item.unreadCount}}条] {{item.lastMessage.payload.text}}</view>-->
+    <!--</view>-->
+  </view>
+</view>
+
+<!-- 消息列表为空的视图 -->
